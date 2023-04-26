@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: larger;
+}
+
+html, body {
+    height: 100%;
+}
+
+/* https://uigradients.com/#KyeMeh link para ver gradientes */
+
+/* Definir un height y ponerle overflow hidden hace que este elemento NO tenga un scroll */
+#mainContainer {
+    height: 100%;
+    overflow: hidden;
+    padding: 20px;
+    background-image: linear-gradient(to right, rgb(233, 105, 0) , purple);
+
+    display: flex;
+    align-items: center;
+}
+
+/* Definir un height y ponerle overflow auto hace que este elemento tenga un scroll */
+.scrollable-element {
+    height: 100%;
+    overflow: auto;
+    width: 50%;
+    /*margin-top: 5%; */
+  }
