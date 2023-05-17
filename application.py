@@ -69,6 +69,7 @@ def tryNewRoom(roomName):
         rooms.append(new_room)
         join_room(new_room["room_name"])
         success = new_room["room_name"]
+        emit('mustUpdateRooms', broadcast=True, include_self=True)
     else:
         success = False
 
@@ -79,3 +80,15 @@ def tryNewRoom(roomName):
 def getRooms():
     global rooms
     return rooms
+
+@socketio.on("deleteRoom") 
+def deleteRoom(roomNameDelete):
+    global rooms
+    
+    flag = False
+    for room in rooms:
+        if 'room_name' in room and room['room_name'] == roomNameDelete:
+            rooms.remove(room)
+            flag = True
+            emit('mustUpdateRooms', broadcast=True, include_self=True)
+    return flag

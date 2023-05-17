@@ -70,20 +70,20 @@ html, body {
 
 .roomElement {
     min-height: 40px;
-    border-bottom: solid lightgray 1.2px;
+    border-top: solid lightgray 1.2px;
     text-align: center;
     padding: 10px;
     color: var(--dark_blue);
 }
 
-.firstRoomElement {
+/* .firstRoomElement {
     border-top: solid lightgray 1.2px;
 }
 
 .lastRoomElement {
     border-bottom: none;
     margin-bottom: 1px;
-}
+} */
 
 .roomElement:hover {
     background-color: #B9EDDD;
