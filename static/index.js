@@ -1,62 +1,48 @@
 console.log("ala")
 
+const usernameText = document.querySelector("#usernameText"); //Texto del nombre de usuario
+
+const socket = io();
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    const socket = io();
 
     let room;
 
     let id;
 
-    const modalUser = new bootstrap.Modal('#modali', {
+    const modalUser = new bootstrap.Modal('#modalUser', {
+        keyboard: false
+    });
+    
+    // Nodo y event listener para abrir el modal de nuevo room
+    const modalNewRoom = new bootstrap.Modal('#modalNewRoom', {
         keyboard: false
     });
 
-    function checkUsername()
-    {
-        const user = localStorage.getItem("fchat_user");
-
-        //Si el cliente no tiene usuario en localstorage
-        if (!user) 
-        {
-            //Que ingrese uno
-            modalUser.show();
-        }
-
-        //Si ya está en localstorage, hay que guardarlo en el servidor (se verifica si existe en el servidor)
-        //socket.emit("saveUser", user);
+    document.querySelector("#crearSalaButton").onclick = () => {
+        modalNewRoom.show();
     }
-
-    sGetUsers = () => {
-        socket.emit("getUsers");
-    }
-
     
-
     ///////////////////////////////////////////////////
 
     // // const join_button = document.querySelector("#join");
-    socket.on("meConnected", () => {
-        
-        checkUsername();
-        //   id = message;
-        //   localStorage.setItem("userConnected", message);
+    socket.on("meConnected", () => {    
+        const user = localStorage.getItem("fchat_user");
+        //Si el cliente no tiene usuario en localstorage
+        if (!user) 
+        {
+            modalUser.show(); //Que ingrese uno
+        }
+        else
+        {
+            usernameText.innerText = user;
+        }
+
         // document.querySelector("#root").append(message);
         // document.querySelector("#root").innerHTML += "<br/>"
     })
-
-    // socket.on("userExists", (username) => {
-    //     // alert("El usuario "+username+" está ocupado, por favor elija otro");
-    //     console.log("El usuario "+username+" está ocupado, por favor elija otro");
-    //     modalUser.show();
-    //     // checkUser();   
-    // })
-
-    // socket.on("userSaved", (username) => {
-    //     alert("El usuario "+username+" se ha conectado correctamente");
-    // })
 
     socket.on("showUsers", (users) => {
         alert("users: "+users);
@@ -107,15 +93,24 @@ document.addEventListener("DOMContentLoaded", () => {
     // })
 })
 
-function envioModal() 
+function envioModalUser() 
 {
     let username = document.querySelector("#username").value;
     localStorage.setItem("fchat_user", username);
+    usernameText.innerText = username;
     modalUser.hide();
-    //checkUsername();
 }
 
 function getUsers()
 {
-    sGetUsers();
+    socket.emit("getUsers");
+}
+
+function envioModalNewRoom() 
+{
+    let roomName = document.querySelector("#roomName").value;
+    //localStorage.setItem("fchat_user", username);
+    //usernameText.innerText = username;
+    socket.emit("tryNewRoom", roomName);
+    //modalNewRoom.hide();
 }

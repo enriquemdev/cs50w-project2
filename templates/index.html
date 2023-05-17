@@ -13,9 +13,27 @@
     <div id="mainContainer" class="container-fluid">
 
           <div id="roomsSidebar" class="col-3 scrollable-element">
-            <button onclick="getUsers();">
-              Get users
-            </button>
+
+            <div class="w-100 contenedor" id="usernameContainer">
+              <h5 class="text-center d_blue_text">Nombre: 
+                <span id="usernameText" class="text-black">username</span>
+              </h5>
+            </div>
+
+            <div class="w-100" id="controlsContainer">
+              <h5 class="text-center d_blue_text">Controles
+              </h5>
+
+              <button onclick="getUsers();">
+                Get users
+              </button>
+
+              <button id="crearSalaButton">
+                Crear Sala
+              </button>
+            </div>
+
+           
 
                <!-- Contenido con scroll interno -->
             <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
@@ -39,27 +57,47 @@
       </div>
 
         
-    <!-- Modal -->
-    <div id="modali" class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <!-- Modal User -->
+    <div id="modalUser" class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-4" id="staticBackdropLabel">Datos</h1>
-            <button type="button" class="btn-close fs-5" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form onsubmit="envioModal(); return false;">
+            <form onsubmit="envioModalUser(); return false;">
               <div class="mb-3">
-                <label for="username" class="form-label fs-5">Escribe tu usuario</label>
-                <input type="text" class="form-control" id="username" placeholder="Tu usuario :P">
+                <label for="username" class="form-label fs-5">Escribe tu nombre de usuario</label>
+                <input type="text" class="form-control" id="username" placeholder="Tu nombre de usuario :P">
               </div>
-              <button type="submit" class="btn btn-primary">Enviar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
             </form>
           </div>
           <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="button" class="btn btn-primary">Understood</button>
           </div> -->
+        </div>
+      </div>
+    </div>
+
+     <!-- Modal New Room-->
+     <div id="modalNewRoom" class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-4" id="staticBackdropLabel">Crea una nueva sala de chat</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form onsubmit="envioModalNewRoom(); return false;">
+              <div class="mb-3">
+                <label for="roomName" class="form-label fs-5">Escribe el nombre de la nueva sala</label>
+                <input type="text" class="form-control" id="roomName">
+              </div>
+              <button type="submit" class="btn btn-primary">Crear Sala</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
