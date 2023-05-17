@@ -56,7 +56,6 @@ def tryNewRoom(roomName):
     
     new_room = {
         "room_name": roomName,
-        "client_count": 1,
         "messages": []
     }
     # flag tells you if the room already exists
@@ -75,3 +74,8 @@ def tryNewRoom(roomName):
 
     return success
     
+
+@socketio.on("getRooms") 
+def getRooms():
+    global rooms
+    return rooms

@@ -14,14 +14,14 @@
 
           <div id="roomsSidebar" class="col-3 scrollable-element">
 
-            <div class="w-100 contenedor" id="usernameContainer">
-              <h5 class="text-center d_blue_text">Nombre: 
+            <div class="w-100 contenedor p-3" id="usernameContainer">
+              <h5 class="text-center d_blue_text">Nombre de usuario: 
                 <span id="usernameText" class="text-black">username</span>
               </h5>
             </div>
 
             <div class="w-100 contenedor" id="controlsContainer">
-              <h5 class="text-center d_blue_text">Controles
+              <h5 class="text-center d_blue_text">Controles:
               </h5>
 
               <button id="getUsersButton">
@@ -33,11 +33,11 @@
               </button>
             </div>
 
-            <div class="w-100 contenedor" id="roomsContainer">
-              <h5 class="text-center d_blue_text">Salas
+            <div class="w-100 contenedor" id="roomsContainerParent">
+              <h5 class="text-center d_blue_text">Salas:
               </h5>
-
-              
+            
+              <div class="w-100" id="roomsContainer"></div>   
             </div>
 
            
@@ -52,13 +52,12 @@
            
           </div>
 
-          <div class="col-9 scrollable-element">
-            <!-- Contenido con scroll interno -->
-            <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
-            <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
-            <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
-            <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
-            <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
+          <div class="col-9 scrollable-element p-3">
+            <div id="chatTitleContainer">
+              <h5 class="text-left d_blue_text">Sala: 
+                <span id="room_title" class="text-black"></span>
+              </h5>
+            </div>
           </div>
 
       </div>

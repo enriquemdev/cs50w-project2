@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
         keyboard: false
     });
 
+    const roomsContainer = document.querySelector("#roomsContainer");
+
 
     //Functions //////////////////////////////////////////////////
     function envioModalUser() 
@@ -48,8 +50,10 @@ document.addEventListener("DOMContentLoaded", () => {
             {
                 modalNewRoom.hide();
                 document.querySelector("#roomName").value = "";
+                room = res;
+                updateRoomsList();
+                localStorage.setItem(("fchat_owner_"+res), 1);
                 alert(`Sala: ${res} creada con exito`);
-                
             }
             else
             {
@@ -59,6 +63,55 @@ document.addEventListener("DOMContentLoaded", () => {
             // document.querySelector("#root").innerHTML += "<br/>"
         });
     }
+
+    function updateRoomsList()
+    {
+        socket.emit("getRooms", (res) => {
+            console.log(res);
+
+            roomsContainer.innerHTML = "";
+
+            for (let room of res) {
+                //verificar si el usuario es el dueño de la sala
+                let ownership = localStorage.getItem("fchat_owner_"+room['room_name']);
+
+                //Crear el elemento de la sala
+                roomElement = document.createElement("div");
+                roomElement.classList.add("roomElement");
+                roomElement.innerHTML = `<h6>${room['room_name']}</h6>`;
+
+                //Si es dueño, agregar el boton de eliminar
+                if (ownership)
+                {
+                    roomElement.innerHTML =  `   
+                            <h6>${room['room_name']}</h6>
+                            <button class="btn btn-danger delete_room" id="delete_room_${room['room_name']}">Eliminar sala</button>
+                        `;
+                }
+                else
+                {
+                    roomElement.innerHTML = `<h6>${room['room_name']}</h6>`;
+                }
+                roomsContainer.append(roomElement);
+            }
+
+            if (res)
+            {
+                roomsContainer.querySelector('div:first-child').classList.add("firstRoomElement");
+                roomsContainer.querySelector('div:last-child').classList.add("lastRoomElement");
+            }
+            
+            //Agregar event listener a los botones de eliminar
+            const deleteRoomButtons = document.querySelectorAll(".delete_room");
+            for (let button of deleteRoomButtons)
+            {
+                button.onclick = (e) => {
+                    console.log(e.target.id);
+                };
+            }
+
+        });
+    } //fin updateRoomsList function
 
     //Event Listeners /////////////////////////////////////////////////
     document.querySelector("#guardarUsernameButton").onclick = () => {
@@ -73,9 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         modalNewRoom.show();
     }
     
-    document.querySelector("#createRoomButton").onclick = () => {
-        envioModalNewRoom();
-    }
+    
 
     
     
@@ -93,6 +144,8 @@ document.addEventListener("DOMContentLoaded", () => {
         {
             usernameText.innerText = user;
         }
+
+        updateRoomsList();
 
         // document.querySelector("#root").append(message);
         // document.querySelector("#root").innerHTML += "<br/>"

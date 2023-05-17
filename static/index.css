@@ -1,10 +1,11 @@
 :root {
     --dfColor: #ebebeb;
     --dark_blue: #577D86;
+    --less_dark_blue: #569DAA;
   }
 
 .d_blue_text {
-    color: var(--dark_blue);
+    color: var(--less_dark_blue);
 }
 
 * {
@@ -59,6 +60,38 @@ html, body {
 }
 
 .contenedor {
-    border-bottom: solid #2ebf91 0.5px;
+    border-bottom: solid #2ebf91 2px;
     margin-bottom: 8px;
 }
+
+#roomsContainerParent > h5 {
+    margin-bottom: 15px;
+}
+
+.roomElement {
+    min-height: 40px;
+    border-bottom: solid lightgray 1.2px;
+    text-align: center;
+    padding: 10px;
+    color: var(--dark_blue);
+}
+
+.firstRoomElement {
+    border-top: solid lightgray 1.2px;
+}
+
+.lastRoomElement {
+    border-bottom: none;
+    margin-bottom: 1px;
+}
+
+.roomElement:hover {
+    background-color: #B9EDDD;
+    cursor: pointer;
+}
+
+.delete_room {
+    font-size: 0.8em;
+    font-weight: 600;
+}
+
