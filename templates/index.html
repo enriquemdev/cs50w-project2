@@ -52,11 +52,17 @@
            
           </div>
 
-          <div class="col-9 scrollable-element p-3">
-            <div id="chatTitleContainer">
+          <div class="col-9 scrollable-element p-3 position-relative" id="chatContainer">
+
+            <div id="chatTitleContainer" class="bg-dark-subtle">
               <h5 class="text-left d_blue_text">Sala: 
                 <span id="room_title" class="text-black"></span>
               </h5>
+            </div>
+
+            <div id="chatSendContainer" class="bg-dark-subtle position-absolute bottom-0 w-100 d-flex">
+              <input class="flex-grow-1 p-2 form-control me-3" type="text">
+              <button class="btn btn-success">Enviar</button>
             </div>
           </div>
 

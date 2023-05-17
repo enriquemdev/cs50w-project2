@@ -95,3 +95,26 @@ html, body {
     font-weight: 600;
 }
 
+#chatTitleContainer, #chatSendContainer
+{
+    margin-top: -16px;
+    margin-left: -16px;
+    margin-right: -16px;
+    border-bottom: solid darkgray 1.2px;
+}
+
+#chatTitleContainer > h5 
+{
+    padding: 12px;
+    margin-bottom: 0;
+}
+
+#chatSendContainer {
+    padding: 12px;
+    border-top: solid darkgray 1.2px;
+}
+
+/* #chatSendContainer > input, #chatSendContainer > button{
+    border-radius: 4px;
+} */
+
