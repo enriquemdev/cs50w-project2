@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, request
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 clients_arr = []
+rooms = []
 
 
 @app.route("/")
@@ -47,3 +48,30 @@ def disconnect():
     global clients_arr
     clients_arr.remove(request.sid)
     emit("user_disconnect", request.sid, broadcast=True, include_self=False)
+    
+    
+@socketio.on('tryNewRoom')
+def tryNewRoom(roomName):
+    global rooms
+    
+    new_room = {
+        "room_name": roomName,
+        "client_count": 1,
+        "messages": []
+    }
+    # flag tells you if the room already exists
+    flag = False
+    
+    for room in rooms:
+        if 'room_name' in room and room['room_name'] == roomName:
+            flag = True
+
+    if flag == False:
+        rooms.append(new_room)
+        join_room(new_room["room_name"])
+        success = new_room["room_name"]
+    else:
+        success = False
+
+    return success
+    

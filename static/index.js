@@ -7,7 +7,7 @@ const socket = io();
 
 
 document.addEventListener("DOMContentLoaded", () => {
-
+    //Variables /////////////////////////////////////////////////
     let room;
 
     let id;
@@ -21,9 +21,63 @@ document.addEventListener("DOMContentLoaded", () => {
         keyboard: false
     });
 
-    document.querySelector("#crearSalaButton").onclick = () => {
+
+    //Functions //////////////////////////////////////////////////
+    function envioModalUser() 
+    {
+        let username = document.querySelector("#username").value;
+        localStorage.setItem("fchat_user", username);
+        usernameText.innerText = username;
+        modalUser.hide();
+    }
+
+    function getUsers()
+    {
+        socket.emit("getUsers");
+    }
+
+    function envioModalNewRoom() 
+    {
+        let roomName = document.querySelector("#roomName").value;
+        //localStorage.setItem("fchat_user", username);
+        //usernameText.innerText = username;
+        socket.emit("tryNewRoom", roomName, (res) => {
+            //room = res;
+            //console.log(res)
+            if (res)
+            {
+                modalNewRoom.hide();
+                document.querySelector("#roomName").value = "";
+                alert(`Sala: ${res} creada con exito`);
+                
+            }
+            else
+            {
+                alert(`Ese nombre de sala ya esta ocupado, prueba con otro`);
+            }
+            // document.querySelector("#root").innerText = `Te has unido a la sala ${room}`;
+            // document.querySelector("#root").innerHTML += "<br/>"
+        });
+    }
+
+    //Event Listeners /////////////////////////////////////////////////
+    document.querySelector("#guardarUsernameButton").onclick = () => {
+        envioModalUser();
+    }
+
+    document.querySelector("#getUsersButton").onclick = () => {
+        getUsers();
+    }
+
+    document.querySelector("#modalCrearSalaButton").onclick = () => {
         modalNewRoom.show();
     }
+    
+    document.querySelector("#createRoomButton").onclick = () => {
+        envioModalNewRoom();
+    }
+
+    
     
     ///////////////////////////////////////////////////
 
@@ -92,25 +146,3 @@ document.addEventListener("DOMContentLoaded", () => {
     //   //document.querySelector("#root").innerHTML += "<br/>";
     // })
 })
-
-function envioModalUser() 
-{
-    let username = document.querySelector("#username").value;
-    localStorage.setItem("fchat_user", username);
-    usernameText.innerText = username;
-    modalUser.hide();
-}
-
-function getUsers()
-{
-    socket.emit("getUsers");
-}
-
-function envioModalNewRoom() 
-{
-    let roomName = document.querySelector("#roomName").value;
-    //localStorage.setItem("fchat_user", username);
-    //usernameText.innerText = username;
-    socket.emit("tryNewRoom", roomName);
-    //modalNewRoom.hide();
-}

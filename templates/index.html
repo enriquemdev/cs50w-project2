@@ -20,27 +20,34 @@
               </h5>
             </div>
 
-            <div class="w-100" id="controlsContainer">
+            <div class="w-100 contenedor" id="controlsContainer">
               <h5 class="text-center d_blue_text">Controles
               </h5>
 
-              <button onclick="getUsers();">
+              <button id="getUsersButton">
                 Get users
               </button>
 
-              <button id="crearSalaButton">
+              <button id="modalCrearSalaButton">
                 Crear Sala
               </button>
+            </div>
+
+            <div class="w-100 contenedor" id="roomsContainer">
+              <h5 class="text-center d_blue_text">Salas
+              </h5>
+
+              
             </div>
 
            
 
                <!-- Contenido con scroll interno -->
+            <!-- <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
             <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
             <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
             <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
-            <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
-            <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p>
+            <p>En resumen, la instalación de servicios de datos y procesamiento es un paso crítico en la implementación de sistemas de información modernos. Es importante comprender los requisitos del sistema y descargar e instalar los servicios adecuados. La configuración cuidadosa y la integración con otros componentes del sistema de información son esenciales para garantizar que los servicios de datos y procesamiento funcionen correctamente. Las pruebas y la documentación son críticas para garantizar que el sistema de información funcione sin problemas y proporcione los resultados esperados.</p> -->
 
            
           </div>
@@ -65,12 +72,12 @@
             <h1 class="modal-title fs-4" id="staticBackdropLabel">Datos</h1>
           </div>
           <div class="modal-body">
-            <form onsubmit="envioModalUser(); return false;">
+            <form>
               <div class="mb-3">
                 <label for="username" class="form-label fs-5">Escribe tu nombre de usuario</label>
                 <input type="text" class="form-control" id="username" placeholder="Tu nombre de usuario :P">
               </div>
-              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="button" id="guardarUsernameButton" class="btn btn-primary">Guardar</button>
             </form>
           </div>
           <!-- <div class="modal-footer">
@@ -90,12 +97,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form onsubmit="envioModalNewRoom(); return false;">
+            <form>
               <div class="mb-3">
                 <label for="roomName" class="form-label fs-5">Escribe el nombre de la nueva sala</label>
                 <input type="text" class="form-control" id="roomName">
               </div>
-              <button type="submit" class="btn btn-primary">Crear Sala</button>
+              <button type="button" class="btn btn-primary" id="createRoomButton">Crear Sala</button>
             </form>
           </div>
         </div>
