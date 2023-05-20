@@ -6,6 +6,8 @@ const socket = io();
 
 
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
     //Variables /////////////////////////////////////////////////
     let room;
@@ -23,14 +25,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const roomsContainer = document.querySelector("#roomsContainer");
 
+    const messagesContainer = document.querySelector("#messagesContainer"); //Contenedor de mensajes
 
+    const room_title = document.querySelector("#room_title"); //Titulo de la sala
     //Functions //////////////////////////////////////////////////
     function envioModalUser() 
     {
         let username = document.querySelector("#username").value;
-        localStorage.setItem("fchat_user", username);
-        usernameText.innerText = username;
-        modalUser.hide();
+        if (username != "")
+        {
+            localStorage.setItem("fchat_user", username);
+            usernameText.innerText = username;
+            modalUser.hide();
+        }
     }
 
     function getUsers()
@@ -43,25 +50,31 @@ document.addEventListener("DOMContentLoaded", () => {
         let roomName = document.querySelector("#roomName").value;
         //localStorage.setItem("fchat_user", username);
         //usernameText.innerText = username;
-        socket.emit("tryNewRoom", roomName, (res) => {
-            //room = res;
-            //console.log(res)
-            if (res)
-            {
-                modalNewRoom.hide();
-                document.querySelector("#roomName").value = "";
-                room = res;
-                //updateRoomsList();
-                localStorage.setItem(("fchat_owner_"+res), 1);
-                alert(`Sala: ${res} creada con exito`);
-            }
-            else
-            {
-                alert(`Ese nombre de sala ya esta ocupado, prueba con otro`);
-            }
-            // document.querySelector("#root").innerText = `Te has unido a la sala ${room}`;
-            // document.querySelector("#root").innerHTML += "<br/>"
-        });
+
+        if (roomName != "")
+        {
+            socket.emit("tryNewRoom", roomName, (res) => {
+                //room = res;
+                //console.log(res)
+                if (res)
+                {
+                    modalNewRoom.hide();
+                    document.querySelector("#roomName").value = "";
+                    room = res;
+                    room_title.innerText = room;
+                    //updateRoomsList();
+                    localStorage.setItem(("fchat_owner_"+res), 1);
+                    alert(`Sala: ${res} creada con exito`);
+                }
+                else
+                {
+                    alert(`Ese nombre de sala ya esta ocupado, prueba con otro`);
+                }
+                // document.querySelector("#root").innerText = `Te has unido a la sala ${room}`;
+                // document.querySelector("#root").innerHTML += "<br/>"
+            });
+        }
+        
     }
 
     function updateRoomsList()
@@ -78,19 +91,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 //Crear el elemento de la sala
                 roomElement = document.createElement("div");
                 roomElement.classList.add("roomElement");
+                //roomElement.id = "roomElement_"+room['room_name'];
+                roomElement.setAttribute("roomName", room['room_name']);
                 roomElement.innerHTML = `<h6>${room['room_name']}</h6>`;
 
                 //Si es dueño, agregar el boton de eliminar
                 if (ownership)
                 {
                     roomElement.innerHTML =  `   
-                            <h6>${room['room_name']}</h6>
+                            <h6 roomName="${room['room_name']}">${room['room_name']}</h6>
                             <button class="btn btn-danger delete_room" id="delete_room_${room['room_name']}">Eliminar sala</button>
                         `;
                 }
                 else
                 {
-                    roomElement.innerHTML = `<h6>${room['room_name']}</h6>`;
+                    roomElement.innerHTML = `<h6 roomName="${room['room_name']}">${room['room_name']}</h6>`;
                 }
                 roomsContainer.append(roomElement);
             }
@@ -108,10 +123,20 @@ document.addEventListener("DOMContentLoaded", () => {
                         deleteRoom(e.target.id);
                     };
                 }
-            }
-            
-            
 
+                //Agregar event listener a los elementos de sala (para entrar a la sala)
+                const roomElements = document.querySelectorAll(".roomElement");
+                for (let roomElement of roomElements)
+                {
+                    roomElement.onclick = (e) => {
+                        if (!(e.target.classList.contains("delete_room")))
+                        {
+                            roomNameEnter = e.target.getAttribute("roomName");
+                            enterRoom(roomNameEnter);
+                        }          
+                    };
+                }
+            }
         });
     } //fin updateRoomsList function
 
@@ -139,6 +164,51 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function sendMessage()
+    {
+        let message = document.querySelector("#chatInput").value;
+        const user = localStorage.getItem("fchat_user");
+
+        messageData = {
+            "message": message,
+            "room": room,
+            "user": user,
+            "datetime": new Date().toLocaleString()
+        }
+        console.log(messageData);
+
+        if(message != "")
+        {
+            socket.emit("sendMessage", messageData, (res) => {
+                if (!res)
+                {
+                    alert(`No se pudo enviar el mensaje :(`);
+                }
+            });
+    
+            document.querySelector("#chatInput").value = "";
+        }   
+    }
+
+    function enterRoom(roomNameEnter)
+    {
+        //let roomNameEnter = idRoom.replace("roomElement_", "");
+        socket.emit("enterRoom", roomNameEnter, (res) => {
+            console.log(res);
+            if (res)
+            {
+                room = roomNameEnter;
+                room_title.innerText = room;
+                alert(`Bienvenido a la sala: ${roomNameEnter}`);  
+            }
+            else
+            {
+                alert(`No se pudo ingresar a la sala :(`);
+            }
+        });
+    }
+    
+
     //Event Listeners /////////////////////////////////////////////////
     document.querySelector("#guardarUsernameButton").onclick = () => {
         envioModalUser();
@@ -155,9 +225,20 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#createRoomButton").onclick = () => {
         envioModalNewRoom();
     }
+
+    document.querySelector("#sendMsgButton").onclick = () => {
+        sendMessage();
+    }
+
+    document.querySelectorAll(".enter_send").forEach(item => {  
+        item.addEventListener('keyup', event => {
+            let flag = item.classList.contains("enter_send");
+            if (event.key === 'Enter' && flag) {
+                sendMessage();
+            }
+        })
+    });
     
-    
- 
     ///////////////////////////////////////////////////
 
     // // const join_button = document.querySelector("#join");
@@ -174,9 +255,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         updateRoomsList();
-
-        // document.querySelector("#root").append(message);
-        // document.querySelector("#root").innerHTML += "<br/>"
     })
 
     socket.on("showUsers", (users) => {
@@ -191,43 +269,32 @@ document.addEventListener("DOMContentLoaded", () => {
         updateRoomsList();
     })
 
-    // socket.on("userConnected", (message) => {
-        
+    socket.on("retrieveMessage", (messageData) => {
+        console.log("new message ");
+        console.log(messageData['message']);
 
-    //   id = message;
-    //   //localStorage.setItem("userConnected", message);
-    //   document.querySelector("#root").append(message);
-    //   document.querySelector("#root").innerHTML += "<br/>"
-    // })
+        let elementoMsg = document.createElement("div");
 
-    // // join_button.onclick = () => {
-    // //   socket.emit("join_room", "WEB50", (res) => {
-    // //     room = res;
-    // //     document.querySelector("#root").innerText = `Te has unido a la sala ${room}`;
-    // //     document.querySelector("#root").innerHTML += "<br/>"
-    // //   });
-    // // }
 
-    // const send_message = document.querySelector("#send-message");
+        if (messageData['username'] == localStorage.getItem("fchat_user"))
+        {
+            elementoMsg.classList.add("messageElementMine");
+        }
+        else
+        {
+            elementoMsg.classList.add("messageElement");
+        }
 
-    // send_message.onclick = () => {
-    //   const user = localStorage.getItem("userConnected");
+        elementoMsg.innerHTML = 
+        `
+            <div class="d-flex mb-2">
+                <div class="flex-grow-1 me-3 msg_username">${messageData['username']}</div>
+                <div class="msg_datetime">${messageData['datetime']}</div>
+            </div>
+            
+            <div class="msg_text">${messageData['message']}</div>
+        `;
 
-    //   const message = document.querySelector("#message-input").value+" "+user;
-    //   // console.log('test');
-
-    //   console.log(message);
-
-    //   socket.emit("message", message);
-    //   document.querySelector("#message-input").value = '';
-
-    // }
-
-    // socket.on("message", data => {
-    //   console.log(data);
-    //   const html = `<div class="mensaje">${data}</div>`;
-
-    //   document.querySelector("#root").innerHTML += html;
-    //   //document.querySelector("#root").innerHTML += "<br/>";
-    // })
+        messagesContainer.append(elementoMsg);
+    })
 })

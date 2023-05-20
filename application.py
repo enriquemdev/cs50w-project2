@@ -47,7 +47,7 @@ def getUsers():
 def disconnect():
     global clients_arr
     clients_arr.remove(request.sid)
-    emit("user_disconnect", request.sid, broadcast=True, include_self=False)
+    # emit("user_disconnect", request.sid, broadcast=True, include_self=False)
     
     
 @socketio.on('tryNewRoom')
@@ -81,14 +81,54 @@ def getRooms():
     global rooms
     return rooms
 
+
 @socketio.on("deleteRoom") 
 def deleteRoom(roomNameDelete):
     global rooms
     
     flag = False
     for room in rooms:
+        # Si la clave room_name existe y si el roomName es el que recibe la función
         if 'room_name' in room and room['room_name'] == roomNameDelete:
             rooms.remove(room)
             flag = True
             emit('mustUpdateRooms', broadcast=True, include_self=True)
+    return flag
+
+
+@socketio.on("sendMessage") 
+def getRooms(messageData):
+    global rooms
+    
+    mensajeNuevo = {
+        "username": messageData['user'],
+        "message": messageData['message'],
+        "datetime": messageData['datetime']
+    }
+    
+    flag = False
+    for room in rooms:
+        if 'room' in messageData:
+            # Si la clave room_name existe y si el roomName del room es la clave room del messageData
+            if 'room_name' in room and room['room_name'] == messageData['room']:
+                room['messages'].append(mensajeNuevo)
+                flag = True
+                emit("retrieveMessage", mensajeNuevo, broadcast=False, include_self=True, to=messageData['room'])
+    return flag
+
+@socketio.on("enterRoom") 
+def enterRoom(roomNameEnter):
+    global rooms
+    
+    flag = False
+    print(roomNameEnter+" hola si")
+    for room in rooms:
+        # Si la clave room_name existe y si el roomName es el que recibe la función
+        if 'room_name' in room and room['room_name'] == roomNameEnter:
+            print(room['room_name'], roomNameEnter)
+            flag = True
+            join_room(roomNameEnter)
+            # emit('userEnteredRoom', f'Un usuario ha entrado a la sala {room}', broadcast=False, include_self=False, to=roomNameEnter)
+            
+    print(flag)
     return flag
