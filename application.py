@@ -25,16 +25,16 @@ def connect():
     # emit('userConnected', len(clients_arr), broadcast=True, include_self=False)
     emit('meConnected', broadcast=False, include_self=True)
     
+@socketio.on("saveUser") 
+def saveUser(username):
+    global clients_arr
     
-# @socketio.on("saveUser") 
-# def saveUser(username):
-#     global clients_arr
-#     if username in clients_arr:
-#         emit("userExists", username, broadcast=False, include_self=True)
-#     else:
-
-#         clients_arr.append(username)
-#         emit("userSaved", username, broadcast=False, include_self=True)
+    if username in clients_arr:
+        return False     
+    else:
+        clients_arr.append(username)
+        return True
+        # emit("userSaved", username, broadcast=False, include_self=True)
         
         
 @socketio.on("getUsers") 
@@ -117,7 +117,7 @@ def getRooms(messageData):
     return flag
 
 @socketio.on("enterRoom") 
-def enterRoom(roomNameEnter):
+def enterRoom(roomNameEnter, roomNameLeave):
     global rooms
     
     flag = False
@@ -126,6 +126,13 @@ def enterRoom(roomNameEnter):
         # Si la clave room_name existe y si el roomName es el que recibe la función
         if 'room_name' in room and room['room_name'] == roomNameEnter:
             print(room['room_name'], roomNameEnter)
+            
+            if roomNameLeave != None and roomNameLeave != '':
+                leave_room(roomNameLeave)
+                print('old room '+roomNameLeave)
+            else:
+                print('no old room ')
+                    
             flag = True
             join_room(roomNameEnter)
             # emit('userEnteredRoom', f'Un usuario ha entrado a la sala {room}', broadcast=False, include_self=False, to=roomNameEnter)

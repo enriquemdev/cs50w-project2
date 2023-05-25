@@ -28,15 +28,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const messagesContainer = document.querySelector("#messagesContainer"); //Contenedor de mensajes
 
     const room_title = document.querySelector("#room_title"); //Titulo de la sala
+
+    const chat_container = document.querySelector("#chatContainer"); //Contenedor del chat
     //Functions //////////////////////////////////////////////////
     function envioModalUser() 
     {
         let username = document.querySelector("#username").value;
         if (username != "")
         {
-            localStorage.setItem("fchat_user", username);
-            usernameText.innerText = username;
-            modalUser.hide();
+            socket.emit("saveUser", username, (res) => {
+                //room = res;
+                //console.log(res)
+                if (res)
+                {
+                    localStorage.setItem("fchat_user", username);
+                    usernameText.innerText = username;
+                    modalUser.hide();
+                }
+                else
+                {
+                    alert('El nombre de usuario ingresado ('+username+') ya esta ocupado');
+                }
+
+            })  
+            
         }
     }
 
@@ -193,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function enterRoom(roomNameEnter)
     {
         //let roomNameEnter = idRoom.replace("roomElement_", "");
-        socket.emit("enterRoom", roomNameEnter, (res) => {
+        socket.emit("enterRoom", roomNameEnter, room, (res) => {
             console.log(res);
             if (res)
             {
@@ -294,7 +309,23 @@ document.addEventListener("DOMContentLoaded", () => {
             
             <div class="msg_text">${messageData['message']}</div>
         `;
+        //console.log(chat_container.scrollHeight, chat_container.scrollTop, (chat_container.scrollHeight - chat_container.clientHeight));
 
+        let isAtMaxScroll = false;
+        //Revisar si el nivel de scroll(scrollTop) esta en el rango de 1px arriba o abajo del maximo scroll posible
+        if ((chat_container.scrollTop + 1) >= (chat_container.scrollHeight - chat_container.clientHeight) && (chat_container.scrollTop - 1) <= (chat_container.scrollHeight - chat_container.clientHeight) )
+        {
+            isAtMaxScroll = true;
+        }
         messagesContainer.append(elementoMsg);
+
+        //console.log(chat_container.scrollHeight, chat_container.scrollTop, (chat_container.scrollHeight - chat_container.clientHeight));
+
+        //Si el scroll estaba al final, al crear un nuevo mensaje que se baje el scroll
+        if (isAtMaxScroll)
+        {
+            chat_container.scrollTop = chat_container.scrollHeight;
+        }
+        
     })
 })
