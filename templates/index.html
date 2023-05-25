@@ -11,7 +11,7 @@
 </head>
 <body>
     <div id="mainContainer" class="container-fluid">
-
+      
           <div id="roomsSidebar" class="col-3 scrollable-element">
 
             <div class="w-100 contenedor p-3" id="usernameContainer">
@@ -24,13 +24,15 @@
               <h5 class="text-center d_blue_text">Controles:
               </h5>
 
-              <button id="getUsersButton">
+              <!-- <button id="getUsersButton">
                 Get users
-              </button>
-
-              <button id="modalCrearSalaButton">
-                Crear Sala
-              </button>
+              </button> -->
+              <div class="w-100  d-flex justify-content-center">
+                <button id="modalCrearSalaButton" class="btn btn-primary m-2">
+                  Crear Sala
+                </button>
+              </div>
+              
             </div>
 
             <div class="w-100 contenedor" id="roomsContainerParent">
@@ -117,6 +119,21 @@
         </div>
       </div>
     </div>
+
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+      <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+          <!-- <img src="..." class="rounded me-2" alt="..."> -->
+          <strong class="me-auto">Notificación</strong>
+          <small>Ahora</small>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+        </div>
+      </div>
+    </div>
+
+
 
     <!-- SCRIPTS SECTION -->
     <script src="{{url_for('static', filename='socket.io.min.js')}}"></script>

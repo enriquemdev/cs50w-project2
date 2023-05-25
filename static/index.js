@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     //Variables /////////////////////////////////////////////////
     let room;
 
-    let id;
-
     const modalUser = new bootstrap.Modal('#modalUser', {
         keyboard: false
     });
@@ -30,6 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const room_title = document.querySelector("#room_title"); //Titulo de la sala
 
     const chat_container = document.querySelector("#chatContainer"); //Contenedor del chat
+
+    const toastElList = document.querySelectorAll('.toast')
+    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl))
+
+    const toastLiveExample = document.getElementById('liveToast')
+
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
     //Functions //////////////////////////////////////////////////
     function envioModalUser() 
     {
@@ -47,7 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 else
                 {
-                    alert('El nombre de usuario ingresado ('+username+') ya esta ocupado');
+                    // alert('El nombre de usuario ingresado ('+username+') ya esta ocupado');
+                    //toasty
+                    document.querySelector(".toast-body").innerText = 'El nombre de usuario ingresado ('+username+') ya esta ocupado';
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                    toastBootstrap.show()
                 }
 
             })  
@@ -55,10 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function getUsers()
-    {
-        socket.emit("getUsers");
-    }
+    // function getUsers()
+    // {
+    //     socket.emit("getUsers");
+    // }
 
     function envioModalNewRoom() 
     {
@@ -75,15 +84,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     modalNewRoom.hide();
                     document.querySelector("#roomName").value = "";
-                    room = res;
+                    //room = res;
+                    enterRoom(res);
                     room_title.innerText = room;
                     //updateRoomsList();
                     localStorage.setItem(("fchat_owner_"+res), 1);
-                    alert(`Sala: ${res} creada con exito`);
+                    // alert(`Sala: ${res} creada con exito`);
+                    //toasty
+                    document.querySelector(".toast-body").innerText = `Sala: ${res} creada con exito`;
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                    toastBootstrap.show()
                 }
                 else
                 {
-                    alert(`Ese nombre de sala ya esta ocupado, prueba con otro`);
+                    // alert(`Ese nombre de sala ya esta ocupado, prueba con otro`);
+                    //toasty
+                    document.querySelector(".toast-body").innerText = `Ese nombre de sala ya esta ocupado, prueba con otro`;
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                    toastBootstrap.show()
                 }
                 // document.querySelector("#root").innerText = `Te has unido a la sala ${room}`;
                 // document.querySelector("#root").innerHTML += "<br/>"
@@ -167,12 +185,20 @@ document.addEventListener("DOMContentLoaded", () => {
             {
                 localStorage.removeItem("fchat_owner_"+roomNameDelete);
                 //updateRoomsList();
-                alert(`Sala: ${roomNameDelete} eliminada con exito`);
+
+                //toasty
+                document.querySelector(".toast-body").innerText = `Sala ${roomNameDelete} eliminada con exito`;
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                toastBootstrap.show()
                 
             }
             else
             {
-                alert(`No se pudo eliminar la sala :(`);
+                // alert(`No se pudo eliminar la sala :(`);
+                //toasty
+                document.querySelector(".toast-body").innerText = `No se pudo eliminar la sala :(`;
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                toastBootstrap.show()
             }
             // document.querySelector("#root").innerText = `Te has unido a la sala ${room}`;
             // document.querySelector("#root").innerHTML += "<br/>"
@@ -197,7 +223,11 @@ document.addEventListener("DOMContentLoaded", () => {
             socket.emit("sendMessage", messageData, (res) => {
                 if (!res)
                 {
-                    alert(`No se pudo enviar el mensaje :(`);
+                    // alert(`No se pudo enviar el mensaje, ingresa a una sala primero`);
+                    //toasty
+                    document.querySelector(".toast-body").innerText = `No se pudo enviar el mensaje, ingresa a una sala primero`;
+                    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                    toastBootstrap.show()
                 }
             });
     
@@ -210,17 +240,62 @@ document.addEventListener("DOMContentLoaded", () => {
         //let roomNameEnter = idRoom.replace("roomElement_", "");
         socket.emit("enterRoom", roomNameEnter, room, (res) => {
             console.log(res);
-            if (res)
+            if (res['status'])
             {
                 room = roomNameEnter;
                 room_title.innerText = room;
-                alert(`Bienvenido a la sala: ${roomNameEnter}`);  
+
+                loadMessages(res['data']);
+                localStorage.setItem("fchat_room", roomNameEnter);
+
+                // alert(`Bienvenido a la sala: ${roomNameEnter}`);  
+
+                //toasty
+                document.querySelector(".toast-body").innerText = `Bienvenido a la sala: ${roomNameEnter}`;
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                toastBootstrap.show()
             }
             else
             {
-                alert(`No se pudo ingresar a la sala :(`);
+                // alert(`No se pudo ingresar a la sala ${roomNameEnter}, ya que esta no existe :(`);
+                //toasty
+                document.querySelector(".toast-body").innerText = `No se pudo ingresar a la sala ${roomNameEnter}, ya que esta no existe :(`;
+                const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+                toastBootstrap.show()
             }
         });
+    }
+
+    function loadMessages(messages)
+    {
+        messagesContainer.innerHTML = "";
+
+        for (let message of messages) {
+            let elementoMsg = document.createElement("div");
+
+
+            if (message['username'] == localStorage.getItem("fchat_user"))
+            {
+                elementoMsg.classList.add("messageElementMine");
+            }
+            else
+            {
+                elementoMsg.classList.add("messageElement");
+            }
+    
+            elementoMsg.innerHTML = 
+            `
+                <div class="d-flex mb-2">
+                    <div class="flex-grow-1 me-3 msg_username">${message['username']}</div>
+                    <div class="msg_datetime">${message['datetime']}</div>
+                </div>
+                
+                <div class="msg_text">${message['message']}</div>
+            `;
+
+            messagesContainer.append(elementoMsg);
+        }
+        chat_container.scrollTop = chat_container.scrollHeight;
     }
     
 
@@ -229,9 +304,9 @@ document.addEventListener("DOMContentLoaded", () => {
         envioModalUser();
     }
 
-    document.querySelector("#getUsersButton").onclick = () => {
-        getUsers();
-    }
+    // document.querySelector("#getUsersButton").onclick = () => {
+    //     getUsers();
+    // }
 
     document.querySelector("#modalCrearSalaButton").onclick = () => {
         modalNewRoom.show();
@@ -259,6 +334,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // // const join_button = document.querySelector("#join");
     socket.on("meConnected", () => {    
         const user = localStorage.getItem("fchat_user");
+
+        if (localStorage.getItem("fchat_room") != null && localStorage.getItem("fchat_room") != undefined && localStorage.getItem("fchat_room") != "")
+        {
+            enterRoom(localStorage.getItem("fchat_room"));
+        }
+
         //Si el cliente no tiene usuario en localstorage
         if (!user) 
         {
@@ -273,12 +354,16 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     socket.on("showUsers", (users) => {
-        alert("users: "+users);
+        // alert("users: "+users);
+        //toasty
+        document.querySelector(".toast-body").innerText = "users: "+users;
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        toastBootstrap.show()
     })
 
-    socket.on("user_disconnect", (user) => {
-        alert(user +" disconnected ");
-    })
+    // socket.on("user_disconnect", (user) => {
+    //     alert(user +" disconnected ");
+    // })
 
     socket.on("mustUpdateRooms", () => {
         updateRoomsList();
@@ -327,5 +412,16 @@ document.addEventListener("DOMContentLoaded", () => {
             chat_container.scrollTop = chat_container.scrollHeight;
         }
         
+    })
+
+    socket.on("roomDeleted", () => {
+        messagesContainer.innerHTML = "";
+        room = "";
+        room_title.innerText = "";
+        // alert("La sala fue eliminada, ingresa a otra para seguir enviando mensajes.");
+        //toasty
+        document.querySelector(".toast-body").innerText = "La sala fue eliminada, ingresa a otra para seguir enviando mensajes.";
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+        toastBootstrap.show()
     })
 })

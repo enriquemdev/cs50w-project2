@@ -20,8 +20,8 @@ def index():
 
 @socketio.on('connect')
 def connect():
-    global clients_arr
-    clients_arr.append(request.sid)
+    # global clients_arr
+    # clients_arr.append(request.sid)
     # emit('userConnected', len(clients_arr), broadcast=True, include_self=False)
     emit('meConnected', broadcast=False, include_self=True)
     
@@ -43,10 +43,10 @@ def getUsers():
     emit("showUsers", clients_arr, broadcast=False, include_self=True)
     
     
-@socketio.on('disconnect')
-def disconnect():
-    global clients_arr
-    clients_arr.remove(request.sid)
+# @socketio.on('disconnect')
+# def disconnect():
+#     global clients_arr
+#     clients_arr.remove(request.sid)
     # emit("user_disconnect", request.sid, broadcast=True, include_self=False)
     
     
@@ -92,6 +92,7 @@ def deleteRoom(roomNameDelete):
         if 'room_name' in room and room['room_name'] == roomNameDelete:
             rooms.remove(room)
             flag = True
+            emit('roomDeleted', broadcast=False, include_self=True, to=roomNameDelete)
             emit('mustUpdateRooms', broadcast=True, include_self=True)
     return flag
 
@@ -111,6 +112,10 @@ def getRooms(messageData):
         if 'room' in messageData:
             # Si la clave room_name existe y si el roomName del room es la clave room del messageData
             if 'room_name' in room and room['room_name'] == messageData['room']:
+                
+                if (len(room['messages']) >= 100):
+                    room['messages'].pop(0)
+                    
                 room['messages'].append(mensajeNuevo)
                 flag = True
                 emit("retrieveMessage", mensajeNuevo, broadcast=False, include_self=True, to=messageData['room'])
@@ -120,7 +125,9 @@ def getRooms(messageData):
 def enterRoom(roomNameEnter, roomNameLeave):
     global rooms
     
-    flag = False
+    flag = {
+        'status': False,
+    }
     print(roomNameEnter+" hola si")
     for room in rooms:
         # Si la clave room_name existe y si el roomName es el que recibe la función
@@ -132,8 +139,11 @@ def enterRoom(roomNameEnter, roomNameLeave):
                 print('old room '+roomNameLeave)
             else:
                 print('no old room ')
-                    
-            flag = True
+                 
+            flag = {
+                'status': True,
+                'data': room['messages']
+            }
             join_room(roomNameEnter)
             # emit('userEnteredRoom', f'Un usuario ha entrado a la sala {room}', broadcast=False, include_self=False, to=roomNameEnter)
             
