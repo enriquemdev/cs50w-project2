@@ -20,9 +20,6 @@ def index():
 
 @socketio.on('connect')
 def connect():
-    # global clients_arr
-    # clients_arr.append(request.sid)
-    # emit('userConnected', len(clients_arr), broadcast=True, include_self=False)
     emit('meConnected', broadcast=False, include_self=True)
     
 @socketio.on("saveUser") 
@@ -41,14 +38,7 @@ def saveUser(username):
 def getUsers():
     global clients_arr
     emit("showUsers", clients_arr, broadcast=False, include_self=True)
-    
-    
-# @socketio.on('disconnect')
-# def disconnect():
-#     global clients_arr
-#     clients_arr.remove(request.sid)
-    # emit("user_disconnect", request.sid, broadcast=True, include_self=False)
-    
+     
     
 @socketio.on('tryNewRoom')
 def tryNewRoom(roomName):
@@ -145,7 +135,6 @@ def enterRoom(roomNameEnter, roomNameLeave):
                 'data': room['messages']
             }
             join_room(roomNameEnter)
-            # emit('userEnteredRoom', f'Un usuario ha entrado a la sala {room}', broadcast=False, include_self=False, to=roomNameEnter)
             
     print(flag)
     return flag

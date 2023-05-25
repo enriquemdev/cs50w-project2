@@ -64,10 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // function getUsers()
-    // {
-    //     socket.emit("getUsers");
-    // }
 
     function envioModalNewRoom() 
     {
@@ -103,8 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
                     toastBootstrap.show()
                 }
-                // document.querySelector("#root").innerText = `Te has unido a la sala ${room}`;
-                // document.querySelector("#root").innerHTML += "<br/>"
             });
         }
         
@@ -145,9 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (res.length > 0)
             {
-                // roomsContainer.querySelector('div:first-child').classList.add("firstRoomElement");
-                // roomsContainer.querySelector('div:last-child').classList.add("lastRoomElement");
-
                 //Agregar event listener a los botones de eliminar
                 const deleteRoomButtons = document.querySelectorAll(".delete_room");
                 for (let button of deleteRoomButtons)
@@ -200,8 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
                 toastBootstrap.show()
             }
-            // document.querySelector("#root").innerText = `Te has unido a la sala ${room}`;
-            // document.querySelector("#root").innerHTML += "<br/>"
         });
     }
 
